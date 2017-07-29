@@ -7,9 +7,8 @@ ENV PATH=/opt/bento4/bin:${PATH}
  
 # Install dependencies.
 RUN apk update \
-  && apk add --no-cache python bash \
-  && apk add --no-cache --virtual .build-deps \
-  wget ca-certificates make gcc g++ libgcc
+  && apk add --no-cache \
+  ca-certificates bash python wget libgcc make gcc g++
 
 # Fetch source.
 RUN cd /tmp/ \
@@ -34,8 +33,7 @@ RUN cd /tmp \
   && cp -r Bento4-${BENTO4_VERSION}/Source/C++/**/*.h . ${BENTO4_INSTALL_DIR}/include
 
 # Cleanup.
-RUN rm -rf /var/cache/* /tmp/* \
-  && apk del .build-deps 
+RUN rm -rf /var/cache/* /tmp/*
 
 WORKDIR /opt/bento4
 
