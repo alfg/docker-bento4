@@ -1,31 +1,42 @@
 FROM alpine:3.4
 MAINTAINER Alfred Gutierrez <alf.g.jr@gmail.com>
 
-# ENV BENTO4_VERSION 1-5-0-615
 ENV BENTO4_VERSION 1.5.0-615
+ENV BENTO4_INSTALL_DIR=/opt/bento4
 ENV PATH=/opt/bento4/bin:${PATH}
-
+ 
+# Install dependencies.
 RUN apk update \
-  && apk add wget ca-certificates python make gcc g++ libgcc
+  && apk add --no-cache python bash \
+  && apk add --no-cache --virtual .build-deps \
+  wget ca-certificates make gcc g++ libgcc
 
-# Get Bento4 SDK binaries and install to /opt/bento4.
-# RUN cd /tmp/ && wget http://zebulon.bok.net/Bento4/binaries/Bento4-SDK-${BENTO4_VERSION}.x86_64-unknown-linux.zip \
-#   && unzip Bento4-SDK-${BENTO4_VERSION}.x86_64-unknown-linux.zip && rm Bento4-SDK-${BENTO4_VERSION}.x86_64-unknown-linux.zip
-
+# Fetch source.
 RUN cd /tmp/ \
   && wget -O Bento4-${BENTO4_VERSION}.tar.gz https://github.com/axiomatic-systems/Bento4/archive/v${BENTO4_VERSION}.tar.gz \
   && tar -xzvf Bento4-${BENTO4_VERSION}.tar.gz && rm Bento4-${BENTO4_VERSION}.tar.gz
 
-# RUN cd /tmp/ && mkdir -p /opt/bento4 && cp -r Bento4-SDK-1-5-0-615.x86_64-unknown-linux/. /opt/bento4/
+# Create installation directories.
+RUN mkdir -p \
+  ${BENTO4_INSTALL_DIR}/bin \
+  ${BENTO4_INSTALL_DIR}/scripts \
+  ${BENTO4_INSTALL_DIR}/include
 
-RUN cd /tmp/Bento4-${BENTO4_VERSION}/Build/Targets/x86-unknown-linux && make AP4_BUILD_CONFIG=Release
-RUN cd /tmp/ && mkdir -p /opt/bento4/bin && cp -r Bento4-${BENTO4_VERSION}/Build/Targets/x86-unknown-linux/Release/. /opt/bento4/bin
-RUN cd /tmp/ && mkdir -p /opt/bento4/scripts && cp -r Bento4-${BENTO4_VERSION}/Source/Python/utils/. /opt/bento4/utils
-RUN cd /tmp/ && cp -r Bento4-${BENTO4_VERSION}/Source/Python/wrappers/. /opt/bento4/bin
-RUN cd /tmp/ && mkdir -p /opt/bento4/include && cp -r Bento4-${BENTO4_VERSION}/Source/C++/**/*.h . /opt/bento4/include
+# Build.
+RUN cd /tmp/Bento4-${BENTO4_VERSION}/Build/Targets/x86-unknown-linux \
+  && make AP4_BUILD_CONFIG=Release
 
-RUN rm -rf /tmp/Bento4-${BENTO4_VERSION}
+# Install.
+RUN cd /tmp \
+  && cp -r Bento4-${BENTO4_VERSION}/Build/Targets/x86-unknown-linux/Release/. ${BENTO4_INSTALL_DIR}/bin \
+  && cp -r Bento4-${BENTO4_VERSION}/Source/Python/utils/. ${BENTO4_INSTALL_DIR}/utils \
+  && cp -r Bento4-${BENTO4_VERSION}/Source/Python/wrappers/. ${BENTO4_INSTALL_DIR}/bin \
+  && cp -r Bento4-${BENTO4_VERSION}/Source/C++/**/*.h . ${BENTO4_INSTALL_DIR}/include
 
-WORKDIR /opt/bento4/bin
+# Cleanup.
+RUN rm -rf /var/cache/* /tmp/* \
+  && apk del .build-deps 
 
-CMD ["sh"]
+WORKDIR /opt/bento4
+
+CMD ["bash"]
