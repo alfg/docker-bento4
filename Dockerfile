@@ -33,7 +33,7 @@ RUN cd /tmp \
   && cp -r Bento4-${BENTO4_VERSION}/Source/C++/**/*.h . ${BENTO4_INSTALL_DIR}/include
 
 # Cleanup.
-RUN rm -rf /var/cache/* /tmp/*
+RUN rm -rf /var/cache/apk/* /tmp/*
 
 WORKDIR /opt/bento4
 
