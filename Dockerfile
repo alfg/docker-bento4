@@ -1,7 +1,7 @@
 FROM alpine:3.4
 MAINTAINER Alfred Gutierrez <alf.g.jr@gmail.com>
 
-ENV BENTO4_VERSION 1.5.0-615
+ENV BENTO4_VERSION 1.5.1-621
 ENV BENTO4_INSTALL_DIR=/opt/bento4
 ENV PATH=/opt/bento4/bin:${PATH}
  
