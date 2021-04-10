@@ -1,7 +1,7 @@
 FROM alfg/ffmpeg:latest
 LABEL MAINTAINER Alfred Gutierrez <alf.g.jr@gmail.com>
 
-ENV BENTO4_VERSION 1.6.0-637
+ENV BENTO4_VERSION=1.6.0-637
 ENV BENTO4_INSTALL_DIR=/opt/bento4
 ENV PATH=/opt/bento4/bin:${PATH}
  
