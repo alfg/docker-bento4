@@ -8,7 +8,7 @@ ENV PATH=/opt/bento4/bin:${PATH}
 # Install dependencies.
 RUN apk update \
   && apk add --no-cache \
-  ca-certificates bash python wget libgcc make gcc g++
+  ca-certificates bash python3 wget libgcc make gcc g++
 
 # Fetch source.
 RUN cd /tmp/ \

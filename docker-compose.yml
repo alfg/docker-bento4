@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  bento4:
+    build: .
+    volumes:
+      - ./tmp:/opt/tmp

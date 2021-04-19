@@ -28,6 +28,11 @@ docker run -it bento4 mp4info
 FROM alfg/bento4:latest
 ```
 
+* Example using a mounted volume:
+```
+docker run -v ${PWD}:/opt/tmp/ -it --rm alfg/bento4 mp4info /opt/tmp/video.mp4
+```
+
 ## Resources
 * https://alpinelinux.org/
 * https://www.bento4.com/
